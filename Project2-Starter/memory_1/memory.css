@@ -40,3 +40,7 @@ header p {
 .clear {
     clear: both;
 }
+
+.collapseforgame {
+    display: none;
+}
