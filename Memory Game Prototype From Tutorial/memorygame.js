@@ -1,8 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+$(document).ready(() => {
 
     //card options
-    const cardArray = [
-        {
+    const cardArray = [{
             name: "card1",
             img: "images/card_1.png"
         },
@@ -51,10 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
             img: "images/card_6.png"
         }
     ]
-/* to make the options for different amounts of cards, should we make a 48 card array like
-this, have an event listener for the select box, and use the option ids to correspond with
-popping a certain number of array items out?*/
-
+    /* to make the options for different amounts of cards, should we make a 48 card array like
+    this, have an event listener for the select box, and use the option ids to correspond with
+    popping a certain number of array items out?*/
 
     cardArray.sort(() => 0.5 - Math.random())
 
@@ -92,7 +90,7 @@ popping a certain number of array items out?*/
         cardsChosen = []
         cardsChosenId = []
         resultDisplay.textContent = cardsWon.length
-        if (cardsWon.length ===cardArray.length/2) {
+        if (cardsWon.length === cardArray.length / 2) {
             resultDisplay.textContent = "Congratulations! You found them all!"
         }
     }
@@ -106,9 +104,5 @@ popping a certain number of array items out?*/
             setTimeout(checkForMatch, 500)
         }
     }
-
-
     createBoard()
-
-
 })
