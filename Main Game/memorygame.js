@@ -3,31 +3,43 @@ $(function () {
     $("#tabs").tabs();
 });
 
+let score = 0
+
 $(document).ready(() => {
-    $("#clear_board").click(() => {
+    $("#new_game").click(() => {
+        score = 0;
         clearField();
+        createBoard();
+        cardsWon = [0]
     })
-})
+    $("#save_settings").click(() => {
+        saveData();
+    });
+});
 
-var player_name;
-var num_cards;
+var save_data;
 
-
-
-// initialize the game by checking for preferences
-if (sessionStorage.getItem("memory_game_6") != null) {
-    let retrieving_data = sessionStorage.getItem("memory_game_6") + ",";
-
-    function makeArray(str, delimiter = ",") {
-        let save_data = str.slice(0, str.indexOf("\n")).split(delimiter);
-    }
-    makeArray(retrieving_data)
-
-} else {
-    num_cards = $("#num_cards option:selected").text();
-    num_cards = parseInt(num_cards);
+function makeArray(str, delimiter = ",") {
+    save_data = str.slice(0, str.indexOf("\n")).split(delimiter);
 }
 
+// initialize the game by checking for preferences
+//prioritize loading the player's preferences over the defaults
+if (sessionStorage.getItem("memory_game_6") != null) {
+    let retrieving_data = sessionStorage.getItem("memory_game_6") + ",";
+    makeArray(retrieving_data);
+    $("#player_name").val(save_data[0]);
+    $('#num_cards').val(save_data[1]);
+    console.log("loaded from save: " + save_data);
+} else {
+    console.log("no save data");
+}
+
+function saveData() {
+    save_data = [$("#player_name").val(), $("#num_cards option:selected").text()];
+    console.log("save data: " + save_data);
+    sessionStorage.memory_game_6 = save_data;
+}
 
 //card array
 const cardArray = [{
@@ -175,7 +187,6 @@ const cardArray = [{
     name: "card24",
     img: "images/card_24.png"
 }];
-var current_field
 /* to make the options for different amounts of cards, should we make a 
 8 card array like this, have an event listener for the select box, and
 use the option ids to correspond with popping a certain number of array
@@ -186,14 +197,14 @@ const resultDisplay = document.querySelector("#result");
 var cardsChosen = [];
 var cardsChosenId = [];
 var cardsWon = [];
-
+var current_field = [];
 //create board -
 function createBoard() {
     clearField();
+    score=0;
+    resultDisplay.textContent = score;
     let num_cards = parseInt($("#num_cards option:selected").text());
-    // console.log("before: " + cardArray.length)
     current_field = cardArray.slice(0, num_cards);
-    // console.log("after: " + current_field.length)
     current_field.sort(() => 0.5 - Math.random());
     for (let i = 0; i < current_field.length; i++) {
         var card = document.createElement("img");
@@ -210,21 +221,25 @@ function checkForMatch() {
     const optionTwoId = cardsChosenId[1];
     if (cardsChosen[0] === cardsChosen[1]) {
         // alert("you found a match");
-        cards[optionOneId].setAttribute("src", "images/blank.png")
-        cards[optionOneId].removeEventListener("click", flipCard)
-        cards[optionTwoId].setAttribute("src", "images/blank.png")
-        cards[optionTwoId].removeEventListener("click", flipCard)
+        cards[optionOneId].setAttribute("src", "images/blank.png");
+        cards[optionOneId].removeEventListener("click", flipCard);
+        cards[optionTwoId].setAttribute("src", "images/blank.png");
+        cards[optionTwoId].removeEventListener("click", flipCard);
         cardsWon.push(cardsChosen);
+        score = score + 2;
     } else {
         cards[optionOneId].setAttribute("src", "images/back.png");
         cards[optionTwoId].setAttribute("src", "images/back.png");
-        // alert("Sorry, try again");
+        if (score > 0) {
+            score--
+        }
     }
     cardsChosen = [];
     cardsChosenId = [];
-    resultDisplay.textContent = cardsWon.length;
+
+    resultDisplay.textContent = score
     if (cardsWon.length === current_field.length / 2) {
-        resultDisplay.textContent = "Congratulations! You found them all!";
+        grid.innerHTML = `<p>Congratulations!<br>You found them all!</p>`;
     };
 };
 
@@ -242,4 +257,5 @@ createBoard();
 
 function clearField() {
     $("#cards img").remove();
+    grid.innerHTML=``;
 }
