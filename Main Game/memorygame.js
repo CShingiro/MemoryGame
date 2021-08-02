@@ -3,21 +3,24 @@ $(function () {
     $("#tabs").tabs();
 });
 
-let score = 0
+let score = 0;
 
 $(document).ready(() => {
     $("#new_game").click(() => {
-        score = 0;
-        clearField();
-        createBoard();
-        cardsWon = [0]
+        let retrieving_data = sessionStorage.getItem("memory_game_6") + ",";
+        makeArray(retrieving_data);
+        console.log($("#high_score").val());
+        save_data[3] = parseInt($("#high_score").text());
+        sessionStorage.memory_game_6 = save_data;
+        window.location.assign("index.html");
+        // console.log(save_data)
     })
     $("#save_settings").click(() => {
         saveData();
     });
 });
 
-var save_data;
+var save_data = ["0", 0, "0", 0];
 
 function makeArray(str, delimiter = ",") {
     save_data = str.slice(0, str.indexOf("\n")).split(delimiter);
@@ -30,15 +33,25 @@ if (sessionStorage.getItem("memory_game_6") != null) {
     makeArray(retrieving_data);
     $("#player_name").val(save_data[0]);
     $('#num_cards').val(save_data[1]);
+    $("#scoring_player").text(save_data[2]);
+    $("#high_score").text(save_data[3]);
     console.log("loaded from save: " + save_data);
 } else {
     console.log("no save data");
 }
 
 function saveData() {
-    save_data = [$("#player_name").val(), $("#num_cards option:selected").text()];
+    save_data[0] = $("#player_name").val();
+    save_data[1] = $("#num_cards option:selected").text();
+    if (!isNaN(save_data[3])) {
+        save_data[3] = 0;
+    } else {
+        save_data[3] = $("#high_score").text();
+    }
+    $("#player").val($("#player_name").val());
     console.log("save data: " + save_data);
     sessionStorage.memory_game_6 = save_data;
+    $("#player").text(save_data[0]);
 }
 
 //card array
@@ -200,9 +213,10 @@ var cardsWon = [];
 var current_field = [];
 //create board -
 function createBoard() {
+    $("#player").text($("#player_name").val());
     clearField();
-    score=0;
-    resultDisplay.textContent = score;
+    score = 0;
+    $("#correct").text(score);
     let num_cards = parseInt($("#num_cards option:selected").text());
     current_field = cardArray.slice(0, num_cards);
     current_field.sort(() => 0.5 - Math.random());
@@ -231,25 +245,30 @@ function checkForMatch() {
         cards[optionOneId].setAttribute("src", "images/back.png");
         cards[optionTwoId].setAttribute("src", "images/back.png");
         if (score > 0) {
-            score--
+            score--;
         }
     }
     cardsChosen = [];
     cardsChosenId = [];
-
-    resultDisplay.textContent = score
+    $("#correct").text(score);
     if (cardsWon.length === current_field.length / 2) {
         grid.innerHTML = `<p>Congratulations!<br>You found them all!</p>`;
+        if (score > $("#high_score").text()) {
+            $("#high_score").text(score);
+            save_data[2] = $("#player").text();
+            $("#scoring_player").text($("#player").text())
+            save_data[3] = $("#high_score").text();
+        }
     };
 };
 
 function flipCard() {
-    var cardId = this.getAttribute("data-id")
-    cardsChosen.push(current_field[cardId].name)
-    cardsChosenId.push(cardId)
-    this.setAttribute("src", current_field[cardId].img)
+    var cardId = this.getAttribute("data-id");
+    cardsChosen.push(current_field[cardId].name);
+    cardsChosenId.push(cardId);
+    this.setAttribute("src", current_field[cardId].img);
     if (cardsChosen.length === 2) {
-        setTimeout(checkForMatch, 800)
+        setTimeout(checkForMatch, 800);
     }
 }
 
@@ -257,5 +276,6 @@ createBoard();
 
 function clearField() {
     $("#cards img").remove();
-    grid.innerHTML=``;
+    grid.innerHTML = ``;
+    cardsWon = [];
 }
