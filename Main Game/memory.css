@@ -1,17 +1,36 @@
 body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 100%;
-    background-color: white;
-    width: 750px;
-    margin: 0 auto;
-    border: 3px solid blue;
-    padding: 0 2em 1em;
+    background-color: lightgray;
+    margin: 0
 }
+
+div.wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 560pt;
+    padding: 0 2em 2em;
+    background-image: url(images/brushedmetal.jpg);
+    background-position: center;
+    background-size: cover;
+    border-radius: 12pt;
+    border-style: outset;
+}
+#header {display: flex;}
+#new_game {float: right; margin-left: auto;}
 
 h1 {
     font-size: 150%;
-    color: blue;
+    text-align: center;
+    color: rgb(73, 73, 73);
     margin-bottom: .5em;
+    text-shadow: 2pt 2pt 2pt gainsboro;
+}
+
+main {
+    border-style: inset;
 }
 
 label {
@@ -21,24 +40,18 @@ label {
 
 input,
 select {
-    width: 10em;
+    width: 8em;
     margin-right: 1em;
     margin-bottom: 1em;
-}
-
-input[type=checkbox] {
-    width: 2em;
 }
 
 header p {
     margin: 0 2em 1em 0;
 }
 
-#new_game,
-#player,
-#high_score,
-#correct {
+header p {
     float: left;
+    margin-left: 1em;
 }
 
 #cards img {
@@ -60,9 +73,10 @@ header p {
 .grid {
     display: flex;
     flex-wrap: wrap;
-    height:fit-content;
-    width: fit-content;
+    
+    font-size: 3em;
+    height: fit-content;
+    width: 100%;
 }
-
-img { width: 240pt;
-    height: 320pt;}
+.grid p {text-align: center;
+margin: auto;}
