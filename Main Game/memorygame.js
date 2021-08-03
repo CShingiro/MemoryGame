@@ -257,7 +257,8 @@ function checkForMatch() {
     cardsChosenId = [];
     $("#correct").text(score);
     if (cardsWon.length === current_field.length / 2) {
-        grid.innerHTML = `<p>Congratulations!<br>You found them all!<br>Your percentage is ${((correct_score/(incorrect_score + correct_score))*100).toFixed(2)}%.</p>`;
+        let display_percent = ((correct_score / (incorrect_score + correct_score)) * 100).toFixed(0)
+        grid.innerHTML = `<p>Congratulations!<br>You found them all!<br>${display_percent}% of your moves were correct.</p>`;
         if (score > $("#high_score").text()) {
             $("#high_score").text(score);
             save_data[2] = $("#player").text();
@@ -277,7 +278,7 @@ function flipCard() {
     if (cardsChosen.length === 2) {
         setTimeout(checkForMatch, 800);
     }
-    
+
 }
 
 createBoard();
