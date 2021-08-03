@@ -280,9 +280,7 @@ function flipCard() {
     }
 
 }
-
 createBoard();
-
 // Clears board when clicked.
 function clearField() {
     $("#cards img").remove();
