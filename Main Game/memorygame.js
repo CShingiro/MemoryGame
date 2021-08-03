@@ -244,6 +244,8 @@ function checkForMatch() {
     } else {
         cards[optionOneId].setAttribute("src", "images/back.png");
         cards[optionTwoId].setAttribute("src", "images/back.png");
+        cards[optionOneId].addEventListener("click", flipCard);
+        cards[optionTwoId].addEventListener("click", flipCard);
         if (score > 0) {
             score--;
         }
@@ -264,12 +266,14 @@ function checkForMatch() {
 
 function flipCard() {
     var cardId = this.getAttribute("data-id");
+    this.removeEventListener("click", flipCard);
     cardsChosen.push(current_field[cardId].name);
     cardsChosenId.push(cardId);
     this.setAttribute("src", current_field[cardId].img);
     if (cardsChosen.length === 2) {
         setTimeout(checkForMatch, 800);
     }
+    
 }
 
 createBoard();
