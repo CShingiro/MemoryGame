@@ -40,6 +40,7 @@ if (sessionStorage.getItem("memory_game_6") != null) {
     console.log("no save data");
 }
 
+// Will save name if entered.
 function saveData() {
     save_data[0] = $("#player_name").val();
     save_data[1] = $("#num_cards option:selected").text();
@@ -200,10 +201,6 @@ const cardArray = [{
     name: "card24",
     img: "images/card_24.png"
 }];
-/* to make the options for different amounts of cards, should we make a 
-8 card array like this, have an event listener for the select box, and
-use the option ids to correspond with popping a certain number of array
-items out?*/
 
 const grid = document.querySelector(".grid");
 const resultDisplay = document.querySelector("#result");
@@ -211,7 +208,10 @@ var cardsChosen = [];
 var cardsChosenId = [];
 var cardsWon = [];
 var current_field = [];
-//create board -
+var correct_score = 0;
+var incorrect_score = 0;
+
+//creates board with the number of cards selected by player.
 function createBoard() {
     $("#player").text($("#player_name").val());
     clearField();
@@ -229,6 +229,7 @@ function createBoard() {
     };
 };
 
+// Will check matches and determine percentage.
 function checkForMatch() {
     var cards = $("#cards img");
     const optionOneId = cardsChosenId[0];
@@ -241,11 +242,13 @@ function checkForMatch() {
         cards[optionTwoId].removeEventListener("click", flipCard);
         cardsWon.push(cardsChosen);
         score = score + 2;
+        correct_score++;
     } else {
         cards[optionOneId].setAttribute("src", "images/back.png");
         cards[optionTwoId].setAttribute("src", "images/back.png");
         cards[optionOneId].addEventListener("click", flipCard);
         cards[optionTwoId].addEventListener("click", flipCard);
+        incorrect_score++;
         if (score > 0) {
             score--;
         }
@@ -254,7 +257,7 @@ function checkForMatch() {
     cardsChosenId = [];
     $("#correct").text(score);
     if (cardsWon.length === current_field.length / 2) {
-        grid.innerHTML = `<p>Congratulations!<br>You found them all!</p>`;
+        grid.innerHTML = `<p>Congratulations!<br>You found them all!<br>Your percentage is ${((correct_score/(incorrect_score + correct_score))*100).toFixed(2)}%.</p>`;
         if (score > $("#high_score").text()) {
             $("#high_score").text(score);
             save_data[2] = $("#player").text();
@@ -264,6 +267,7 @@ function checkForMatch() {
     };
 };
 
+// Checks card when flipped.
 function flipCard() {
     var cardId = this.getAttribute("data-id");
     this.removeEventListener("click", flipCard);
@@ -278,6 +282,7 @@ function flipCard() {
 
 createBoard();
 
+// Clears board when clicked.
 function clearField() {
     $("#cards img").remove();
     grid.innerHTML = ``;
