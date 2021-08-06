@@ -235,20 +235,11 @@ function checkForMatch() {
     const optionOneId = cardsChosenId[0];
     const optionTwoId = cardsChosenId[1];
     if (cardsChosen[0] === cardsChosen[1]) {
-        //hide card 1
+        // alert("you found a match");
+        cards[optionOneId].setAttribute("src", "images/blank.png");
         cards[optionOneId].removeEventListener("click", flipCard);
-        $('img[data-id="' + cardsChosenId[0] + '"]').slideToggle(500, function () {
-            $('img[data-id="' + cardsChosenId[0] + '"]').attr("src", 'images/blank.png');
-            // $('img[data-id="' + cardsChosenId[0] + '"]').removeAttr("style");
-        });
-
-        //hide card 2
+        cards[optionTwoId].setAttribute("src", "images/blank.png");
         cards[optionTwoId].removeEventListener("click", flipCard);
-        $('img[data-id="' + cardsChosenId[1] + '"]').slideToggle(500, function () {
-            cards[optionTwoId].setAttribute("src", "images/blank.png");
-            // $('img[data-id="' + cardsChosenId[1] + '"]').removeAttr("style");
-        });
-        $("#cards img").show();
         cardsWon.push(cardsChosen);
         score = score + 2;
         correct_score++;
@@ -289,7 +280,9 @@ function flipCard() {
     }
 
 }
+
 createBoard();
+
 // Clears board when clicked.
 function clearField() {
     $("#cards img").remove();
